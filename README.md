@@ -22,17 +22,15 @@ Linux Devices
 
 
 ## _Participants (with Strengths and Weaknesses):
-JakeClouse#5660
-Strengths: Knows a bit about back end and front end, good with websites, experience with linux mint
-Weaknesses: Issues with databases and connecting front end to back end
+- JakeClouse#5660 **Strengths:** Knows a bit about back end and front end, good with websites, experience with linux mint **Weaknesses:** Issues with databases and connecting front end to back end
 
-NiHaoMike#1935
-divunion#9634
-DragonTigress#9748
+- NiHaoMike#1935
+- divunion#9634
+- DragonTigress#9748
 
 
 ## _Technologies to be used:
-pipewire
+pipewire site: https://pipewire.org/
 
 Tutorial: My 2021 PipeWire Setup | Overview & Demonstration
 
@@ -54,3 +52,7 @@ Are we starting totally from scratch? Is there any demo/code we could use as a s
 What features/hurdles do we need to tackle?
 How do we design the system/overall architecture?
 How do we split up work
+
+
+## _Misc:
+Github Readme Syntax formatting link: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
