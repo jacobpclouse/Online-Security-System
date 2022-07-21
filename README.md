@@ -56,3 +56,5 @@ How do we split up work
 
 ## _Misc:
 Github Readme Syntax formatting link: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
+
+Gitlab Branch commands: https://docs.gitlab.com/ee/gitlab-basics/start-using-git.html#configure-git
