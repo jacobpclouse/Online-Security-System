@@ -14,7 +14,9 @@ Our main goal with this project is a USB to HDMI audio device sound. The intent 
 – Can we use a USB male to XLR (microphone) male cable so it can use for mixers, amplifier, microphones, microphones receiver, and other audio input and output devices (edited) XLR cables are used in a variety of different audio devices to make the audio sound better
 
 ## _PROTOCOLS TO BE USED: ex: UDP
-
+- JSON?
+- TCP?
+- UDP?
 
 ## _Target Devices:
 Raspberry PI
@@ -33,6 +35,7 @@ Linux Devices
 pipewire site: https://pipewire.org/
 
 Tutorial: My 2021 PipeWire Setup | Overview & Demonstration
+    - https://docs.pipewire.org/page_tutorial.html
 
 Supported Protocols: https://gitlab.freedesktop.org/pipewire/pipewire/-/wikis/Network
 
