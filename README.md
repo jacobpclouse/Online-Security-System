@@ -14,3 +14,5 @@
 - OpenCV live stream video over socket in Python 3: https://stackoverflow.com/questions/49084143/opencv-live-stream-video-over-socket-in-python-3
 - Streaming and Saving Video (Web Cam) with OpenCV and : https://www.youtube.com/watch?v=ChWvD3C7SgE
 - How to record video from a webcam using Python & OpenCV: https://www.youtube.com/watch?v=frYotHLJ-Rc
+- Python Virtual Environments: A Primer: https://realpython.com/python-virtual-environments-a-primer/
+- Git CheatSheet PDF: https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet

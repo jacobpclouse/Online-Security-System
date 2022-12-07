@@ -1,0 +1,19 @@
+1) Create New Virtural Envir. (when first starting up -- you can use any name)
+python3 -m venv venvName
+
+
+2) Activate Virtual Envir. 
+source venvName/bin/activate
+
+
+3) Install Packages inside it 
+python -m pip install <package-name>
+
+
+4) Deactivate
+deactivate
+
+
+
+From:
+https://realpython.com/python-virtual-environments-a-primer/
