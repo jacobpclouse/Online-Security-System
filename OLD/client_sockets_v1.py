@@ -14,7 +14,12 @@ import cv2
 import pickle
 import struct
 import imutils
+import matplotlib
+import esmond_client
 
+
+print(matplotlib.__version__)
+print(esmond_client.__builtins__)
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Variables
@@ -43,7 +48,7 @@ def myLogo():
 # MAIN
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-
+'''
 # CLIENT SOCKET
 # create an INET, STREAMING SOCKET: 
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -52,3 +57,4 @@ port = 10050 # Port to listen on (non privilaged ports are > 1023)
 # now connect to the web server on the specified port
 client_socket.connect((host_ip,port))
 # 'b' or 'B' produces an instance of 
+'''
