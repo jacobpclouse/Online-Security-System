@@ -16,3 +16,4 @@
 - How to record video from a webcam using Python & OpenCV: https://www.youtube.com/watch?v=frYotHLJ-Rc
 - Python Virtual Environments: A Primer: https://realpython.com/python-virtual-environments-a-primer/
 - Git CheatSheet PDF: https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet
+- cv2 import error in virtual environment: https://stackoverflow.com/questions/35010064/cv2-import-error-in-virtual-environment

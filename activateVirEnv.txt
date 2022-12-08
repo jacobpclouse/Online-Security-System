@@ -10,7 +10,7 @@ source venvName/bin/activate
 python -m pip install <package-name>
 
 
-4) Deactivate
+4) Deactivate Virtual Envir.
 deactivate
 
 
