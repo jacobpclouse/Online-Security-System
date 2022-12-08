@@ -1,3 +1,7 @@
+0) Update Pip
+pip install --upgrade pip
+
+
 1) Create New Virtural Envir. (when first starting up -- you can use any name)
 python3 -m venv venvName
 

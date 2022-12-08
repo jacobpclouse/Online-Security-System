@@ -1,13 +1,27 @@
 # Online Security System - Jacob Clouse
 
-## Requirements:
+## Overview:
 - This client/server system should allow for a user to hook up multiple cameras and stream this data to a server that saves it for later
-- Can use any number of cameras with no crazy configurations
-- System run on: Linux (Debian/Ubuntu Based)
-- No web gui YET
+- System developed and run on: Linux (Debian/Ubuntu Based)
+
+## Goals / Progression:
+- [] Setup Virtual Environment that works (either PyCharm or vsCode Extensions)
+- [] Able to stream live video from single client to single server, no sound
+- [] Able to save video feed from client to server for playback after stream ends, unique filename, no corruption
+- [] Add Time Stamps and Location in video feed (on Client end)
+- [] Allow port number and IP to be specified in bash command line as arguments (ie: python3 client.py 192.168.1.3 1025)
+- [] Organize ongoing/saved feeds in database with timestamps, name, location, duration, etc.
+- [] Setup Email Alerts to admin email to inform of new clients/client shutdowns and outages via Sendgrid API (socket server)
+- [] Use Django web server (WITH LOGIN) to access videos and play them in browser (seperate user DB, salt & hash)
+- [] Let users organize videos and query the db to filter videos by length, location, or timestamps
+- [] Allow users to control socket server and socket clients from Django Web GUI (ie: terminate connections, start connections)
+- [] Allow for the use of multiple client streams with a central socket server (can add/remove clients without disruptions)
+- [] Use bootstrap and Css to make front end responsive and organized
 
 ## Target Technologies:
-- Python - (OpenCV, Sockets)
+- Python 3.8 - (OpenCV, Sockets)
+- Django (for Web GUI)
+- SQLite (for Database)
 
 ## Sources:
 - Developing a Live Video Streaming Application using Socket Programming with Python: https://medium.com/nerd-for-tech/developing-a-live-video-streaming-application-using-socket-programming-with-python-6bc24e522f19

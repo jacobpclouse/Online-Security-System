@@ -8,6 +8,7 @@ import os
 from os import path
 import datetime
 
+import numpy
 import socket
 import cv2
 import pickle
@@ -15,7 +16,7 @@ import struct
 import imutils
 
 
-
+print(cv2.__version__)
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Variables
@@ -45,3 +46,11 @@ def myLogo():
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 
+# CLIENT SOCKET
+# create an INET, STREAMING SOCKET: 
+client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+host_ip = '<localhost>' # Standard Loopback interface
+port = 10050 # Port to listen on (non privilaged ports are > 1023)
+# now connect to the web server on the specified port
+client_socket.connect((host_ip,port))
+# 'b' or 'B' produces an instance of 

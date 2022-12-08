@@ -8,7 +8,14 @@ import os
 from os import path
 import datetime
 
+import socket
+import cv2
+import pickle
+import struct
+import imutils
 
+
+print(cv2.__version__)
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Variables
