@@ -13,7 +13,7 @@
 - [ ] Allow port number and IP to be specified in bash command line as arguments (ie: python3 client.py 192.168.1.3 1025)
 - [ ] Organize ongoing/saved feeds in database with timestamps, name, location, duration, etc.
 - [ ] Setup Email Alerts to admin email to inform of new clients/client shutdowns and outages via Sendgrid API (socket server)
-- [] Use Django web server (WITH LOGIN) to access videos and play them in browser (seperate user DB, salt & hash)
+- [ ] Use Django web server (WITH LOGIN) to access videos and play them in browser (seperate user DB, salt & hash)
 - [ ] Let users organize videos and query the db to filter videos by length, location, or timestamps
 - [ ] Allow users to control socket server and socket clients from Django Web GUI (ie: terminate connections, start connections)
 - [ ] Allow for the use of multiple client streams with a central socket server (can add/remove clients without disruptions)
@@ -32,3 +32,4 @@
 - Python Virtual Environments: A Primer: https://realpython.com/python-virtual-environments-a-primer/
 - Git CheatSheet PDF: https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet
 - cv2 import error in virtual environment: https://stackoverflow.com/questions/35010064/cv2-import-error-in-virtual-environment
+- Basic writing and formatting syntax: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
