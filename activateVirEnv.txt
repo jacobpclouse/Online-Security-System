@@ -17,3 +17,12 @@ deactivate
 
 From:
 https://realpython.com/python-virtual-environments-a-primer/
+
+
+
+Virtual link:
+cd venv/lib/python2.7 && ln -s /usr/local/lib/python2.7/dist-packages/cv2.so
+cd venv/lib/python2.7 && ln -s /usr/local/lib/python2.7/dist-packages/cv.py
+
+cd venv1/lib/python3.8 && ln -s /usr/local/lib/python3.8/dist-packages/cv2.so
+cd venv1/lib/python3.8 && ln -s /usr/local/lib/python3.8/dist-packages/cv.py
