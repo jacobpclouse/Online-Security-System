@@ -18,6 +18,8 @@
 - [ ] Allow users to control socket server and socket clients from Django Web GUI (ie: terminate connections, start connections)
 - [ ] Allow for the use of multiple client streams with a central socket server (can add/remove clients without disruptions)
 - [ ] Use bootstrap and Css to make front end responsive and organized
+- [ ] __OPTIONAL:__ Add Facial recognition to clients so they can identify who is in frame
+- [ ] __OPTIONAL:__ Use Facial recognition on web GUI for login 
 
 ## Target Technologies:
 - Python 3.8 - (OpenCV, Sockets)
