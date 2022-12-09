@@ -39,7 +39,7 @@ def myLogo():
     print(" /\_/ / (_| | (_| (_) | |_) | / /___| | (_) | |_| \__ \  __/ ")
     print(" \___/ \__,_|\___\___/|_.__/  \____/|_|\___/ \__,_|___/\___| ")
     print("Dedicated to Peter Zlomek & Harely Alderson III")
-
+    print("\n")
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # MAIN
@@ -50,7 +50,8 @@ myLogo()
 # CLIENT SOCKET
 # create an INET, STREAMING SOCKET: 
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-host_ip = '<localhost>' # Standard Loopback interface
+# host_ip = '<localhost>' # Standard Loopback interface - didn't work on local machine
+host_ip = '127.0.1.1' # use command line args to pass this in
 port = 10050 # Port to listen on (non privilaged ports are > 1023)
 # now connect to the web server on the specified port
 client_socket.connect((host_ip,port))

@@ -7,7 +7,7 @@
 ## Goals / Progression:
 - [x] Created client and server files, setup .gitignore
 - [x] Setup Virtual Environment that works (either PyCharm or vsCode Extensions)
-- [ ] Able to stream live video from single client to single server, no sound
+- [x] Able to stream live video from single client to single server, no sound
 - [ ] Able to save video feed from client to server for playback after stream ends, unique filename, no corruption
 - [ ] Add Time Stamps and Location in video feed (on Client end)
 - [ ] Allow port number and IP to be specified in bash command line as arguments (ie: python3 client.py 192.168.1.3 1025)
