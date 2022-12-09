@@ -15,6 +15,8 @@ import pickle
 import struct
 import imutils
 
+print(cv2.__version__)
+print(imutils.__version__)
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Variables
@@ -36,13 +38,14 @@ def myLogo():
     print("    \ \/ _` |/ __/ _ \| '_ \   / /  | |/ _ \| | | / __|/ _ \ ")
     print(" /\_/ / (_| | (_| (_) | |_) | / /___| | (_) | |_| \__ \  __/ ")
     print(" \___/ \__,_|\___\___/|_.__/  \____/|_|\___/ \__,_|___/\___| ")
-
+    print("Dedicated to Peter Zlomek & Harely Alderson III")
 
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # MAIN
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+myLogo()
 
 # CLIENT SOCKET
 # create an INET, STREAMING SOCKET: 
@@ -51,4 +54,7 @@ host_ip = '<localhost>' # Standard Loopback interface
 port = 10050 # Port to listen on (non privilaged ports are > 1023)
 # now connect to the web server on the specified port
 client_socket.connect((host_ip,port))
-# 'b' or 'B' produces an instance of 
+# 'b' or 'B' produces an instance of bytes (instead of a string) 
+data = b''
+# Q: unsigned long integer
+payload_size = struct.calcsize("Q")
