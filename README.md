@@ -15,7 +15,7 @@
 - [ ] Setup Email Alerts to admin email to inform of new clients/client shutdowns and outages via Sendgrid API (socket server)
 - [ ] Use Django web server (WITH LOGIN) to access videos and play them in browser (seperate user DB, salt & hash)
 - [ ] Let users organize videos and query the db to filter videos by length, location, or timestamps
-- [ ] Allow users to control socket server and socket clients from Django Web GUI (ie: terminate connections, start connections)
+- [ ] Allow users to control socket server and socket clients from Django Web GUI (ie: terminate connections, start connections, specifiy port to run on, name camera feed)
 - [ ] Allow for the use of multiple client streams with a central socket server (can add/remove clients without disruptions)
 - [ ] Use bootstrap and Css to make front end responsive and organized
 - [ ] __OPTIONAL:__ Add Facial recognition to clients so they can identify who is in frame
@@ -35,3 +35,5 @@
 - Git CheatSheet PDF: https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet
 - cv2 import error in virtual environment: https://stackoverflow.com/questions/35010064/cv2-import-error-in-virtual-environment
 - Basic writing and formatting syntax: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
+- * How to Create Socket Server with Multiple Clients in Python: https://www.positronx.io/create-socket-server-with-multiple-clients-in-python/
+- * Transfer video over sockets from multiple clients and save at server side with a name: https://pyshine.com/Socket-Programming-Save-Videos-Multiple-Clients/
