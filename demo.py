@@ -192,6 +192,7 @@ def need_extension(filename):
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 @demo.route('/')
 def start_video_stream():
+    myLogo()
     # Start the video streaming process
     p = Process(target=video_stream)
     p.start()
@@ -204,3 +205,11 @@ def start_video_stream():
 # -------------------------------------
 if __name__ == '__main__':
     demo.run(debug=True)
+
+
+'''
+created a flask server to handle the video streams, just need to adjust this so that we dont need a webpage open to allow the streams, allow multiple streams, name cameras, save videos to specific file locations, associate specific cameras with specific streams, etc
+
+## IDEA: add numbers in routes, so we can associate specific routes with specific cameras
+spawn subprocesses so that we can have multiple threads that are not tied to one another
+'''
