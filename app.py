@@ -1,61 +1,72 @@
+# Written by Jacob Clouse 
+# Edited on Windows 10 - may need to be edited if you want to use on Linux/MacOS
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Importing Libraries / Modules
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+import datetime
+import glob
+import io
+import os
+# moving files and folders
+import shutil  # used to move files around and clean folders
+import zipfile  # used in zipping images
+import numpy as np  # used to store actual encrypted data in a file and retrieve it
+from PIL import Image
+
+# video imports
 import cv2
 import socket
 import pickle
 import struct
 from multiprocessing import Process
-from flask import Flask
+
+# Backend imports
+from flask import Flask, request, send_file, \
+    jsonify  # for web back end
+from flask_cors import CORS
+
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Variables
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 app = Flask(__name__)
+# without cors, app will refuse the requests from the frontend
+Cors = CORS(app)
+CORS(app, resources={r'/*': {'origins': '*'}})
+app.config['CORS_HEADERS'] = 'Content-Type'
 
-class CameraStream:
-    def __init__(self, camera_id):
-        self.camera_id = camera_id
-        self.process = None
 
-    def start(self):
-        if self.process is None or not self.process.is_alive():
-            self.process = Process(target=self.video_stream)
-            self.process.start()
 
-    def video_stream(self):
-        # Initialize the server socket
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind(('0.0.0.0', 8000))
-        server_socket.listen(5)
-        print(f"Camera {self.camera_id}: Server started, waiting for client connection...")
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Functions
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# --- Function to print out my Logo ---
+def myLogo():
+    print("Created and Tested by: ")
+    print("   __                  _         ___ _                       ")
+    print("   \ \  __ _  ___ ___ | |__     / __\ | ___  _   _ ___  ___  ")
+    print("    \ \/ _` |/ __/ _ \| '_ \   / /  | |/ _ \| | | / __|/ _ \ ")
+    print(" /\_/ / (_| | (_| (_) | |_) | / /___| | (_) | |_| \__ \  __/ ")
+    print(" \___/ \__,_|\___\___/|_.__/  \____/|_|\___/ \__,_|___/\___| ")
+    print("Dedicated to Peter Zlomek & Harely Alderson III")
+    print("\n")
 
-        # Accept a client connection
-        conn, addr = server_socket.accept()
-        print(f"Camera {self.camera_id}: Client connected:", addr)
 
-        # Open the camera
-        camera = cv2.VideoCapture(self.camera_id)
+# --- Function to Defang date time ---
+def defang_datetime():
+    current_datetime = f"_{datetime.datetime.now()}"
 
-        # Get the video dimensions and initialize the video writer
-        width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = 30
-        video_writer = cv2.VideoWriter(f'streamed_video_{self.camera_id}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
+    current_datetime = current_datetime.replace(":", "_")
+    current_datetime = current_datetime.replace(".", "-")
+    current_datetime = current_datetime.replace(" ", "_")
 
-        while True:
-            # Read a frame from the camera
-            _, frame = camera.read()
+    return current_datetime
 
-            # Write the frame to the video file
-            video_writer.write(frame)
 
-            # Send the frame to the client
-            send_frame(conn, frame)
-
-            # Break the loop if client disconnects
-            if conn.fileno() == -1:
-                break
-
-        # Release the camera, close the connection, and release the video writer
-        camera.release()
-        conn.close()
-        video_writer.release()
-
+# --- *** Function to organize video frames (VIDEO) *** ---
 def send_frame(conn, frame):
     # Serialize the frame
     data = pickle.dumps(frame)
@@ -69,14 +80,129 @@ def send_frame(conn, frame):
         print("Client disconnected")
         conn.close()
 
-@app.route('/')
-def start_video_streams():
-    # Start the camera streams
-    for camera_id in range(2):
-        camera_stream = CameraStream(camera_id)
-        camera_stream.start()
 
-    return "Video streaming started for multiple cameras."
+# --- *** Function to setup video stream (VIDEO) *** ---
+def video_stream(camera_id):
+    # Initialize the server socket
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('0.0.0.0', 8000 + camera_id))  # Use a different port for each camera
+    server_socket.listen(5)
+    print(f"Server started for Camera {camera_id}, waiting for client connection...")
 
+    # Accept a client connection
+    conn, addr = server_socket.accept()
+    print(f"Client connected for Camera {camera_id}:", addr)
+    current_datetime = defang_datetime()
+
+    # Open the camera
+    camera = cv2.VideoCapture(camera_id)  # Use the camera ID as specified in the argument
+
+    # Get the video dimensions and initialize the video writer
+    width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = 30
+    video_writer = cv2.VideoWriter(f'Camera_{camera_id}_data_{current_datetime}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
+
+    while True:
+        # Read a frame from the camera
+        _, frame = camera.read()
+
+        # Write the frame to the video file
+        video_writer.write(frame)
+
+        # Send the frame to the client
+        send_frame(conn, frame)
+
+        # Break the loop if client disconnects
+        if conn.fileno() == -1:
+            break
+
+    # Release the camera, close the connection, and release the video writer
+    camera.release()
+    conn.close()
+    video_writer.release()
+
+
+
+
+''' MISC FUNCTIONS '''
+# --- Function to empty out a directory ---
+def clean_out_directory(folderPath):
+    for filename in os.listdir(folderPath):
+        filePath = os.path.join(folderPath, filename)
+        try:
+            if os.path.isfile(filePath):
+                os.unlink(filePath)
+        except Exception as e:
+            print(f"Failed to delete {filePath} due to {e}")
+
+
+# --- Function to check and see if a directory exists and, if not, create that directory ---
+def create_folder(folderPath):
+    if not os.path.exists(folderPath):
+        os.makedirs(folderPath)
+
+
+# -- Function that takes zip name and then an array of files to zip
+def zip_files(zip_name, files_to_zip):
+    with zipfile.ZipFile(zip_name, 'w') as zip_file:
+        # Add each file to the zip file
+        for file_path in files_to_zip:
+            # Add the file to the zip file with its original name
+            zip_file.write(file_path, arcname=file_path.split('/')[-1])
+
+
+# --- Function that unzips files from zip file ---
+def unzip_files(zip_name):
+    # Create a ZipFile object with the name of the zip file and mode 'r' for read
+    with zipfile.ZipFile(zip_name, mode='r') as zip_obj:
+        # Print a list of all files in the zip file
+        print("Files in zip file:")
+        for file_name in zip_obj.namelist():
+            print(f"- {file_name}")
+        # Extract all files to the current working directory
+        zip_obj.extractall()
+
+
+# --- Function to remove unneeded zip files ---
+def delete_zip_file(extraZip):
+    if os.path.exists(extraZip) and extraZip.endswith('.zip'):
+        os.remove(extraZip)
+        print(f"{extraZip} has been deleted.")
+
+
+# --- Function to get extension for retrieval --
+def need_extension(filename):
+    name, extension = filename.split(".")
+    upperCaseExt = extension.upper()  
+    print(upperCaseExt)
+    return upperCaseExt
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Routes
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+@app.route('/<int:camera_id>')
+def start_video_stream(camera_id):
+    myLogo()
+    # Start the video streaming process for the specified camera ID
+    p = Process(target=video_stream, args=(camera_id,))
+    p.start()
+    return f"Video streaming started for Camera {camera_id}."
+
+
+
+
+# -------------------------------------
+# main statement - used to set dev mode and do auto reloading - remove this before going to production
+# -------------------------------------
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
+
+
+'''
+created a flask server to handle the video streams, just need to adjust this so that we dont need a webpage open to allow the streams, allow multiple streams, name cameras, save videos to specific file locations, associate specific cameras with specific streams, etc
+
+## IDEA: add numbers in routes, so we can associate specific routes with specific cameras
+spawn subprocesses so that we can have multiple threads that are not tied to one another
+'''
