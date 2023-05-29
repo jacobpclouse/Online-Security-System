@@ -52,7 +52,8 @@ myLogo()
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 # host_ip = '<localhost>' # Standard Loopback interface - didn't work on local machine
 host_ip = '127.0.1.1' # use command line args to pass this in
-port = 10050 # Port to listen on (non privilaged ports are > 1023)
+# port = 10050 # Port to listen on (non privilaged ports are > 1023)
+port = 10051
 # now connect to the web server on the specified port
 client_socket.connect((host_ip,port))
 # 'b' or 'B' produces an instance of bytes (instead of a string) 

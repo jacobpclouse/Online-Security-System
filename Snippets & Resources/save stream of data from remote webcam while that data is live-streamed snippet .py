@@ -4,6 +4,7 @@ Snippet: save a stream of data from a remote webcam while that data is being liv
 
 import cv2
 import urllib.request
+import numpy as np
 
 # Set the URL of the remote webcam stream
 url = 'http://example.com/live/stream.mjpeg'
