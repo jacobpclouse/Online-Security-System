@@ -23,7 +23,7 @@
 
 ## Target Technologies:
 - Python 3.8 - (OpenCV, Sockets)
-- Django (for Web GUI)
+- Flask (for Web GUI)
 - SQLite (for Database)
 
 ## Sources:
