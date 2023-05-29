@@ -2,25 +2,36 @@
 
 0) Update Pip:
 ```pip install --upgrade pip```
+<br>
+<br>
 
+1) Create .gitignore and push virt envir name into it:
+```echo "venvName/" > .gitignore```
+    - You will need to add the names of the other folders you don't want to track into this 
+<br>
+<br>
 
-1) Create New Virtural Envir. (when first starting up -- you can use any name) - 
+2) Create New Virtural Envir. (when first starting up -- you can use any name) 
     - If python2 and python3 is installed:
         ```python3 -m venv venvName```
     - Else:
         ```python -m venv venvName```
+<br>
+<br>
 
 
-2) Activate Virtual Envir. 
+3) Activate Virtual Envir. 
     - (LINUX:) ```source venvName/bin/activate```
     - (WINDOWS: ) ```source venvName/Scripts/activate```
+<br>
+<br>
 
-
-3) Install Packages inside it:
+4) Install Packages inside it:
 ```python -m pip install <package-name>```
+<br>
+<br>
 
-
-4) Deactivate Virtual Envir:
+5) Deactivate Virtual Envir:
 ```deactivate```
 
 ------------------------------
