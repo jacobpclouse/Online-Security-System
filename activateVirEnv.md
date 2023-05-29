@@ -5,13 +5,13 @@
 <br>
 <br>
 
-1) Create .gitignore and push virt envir name into it:
+1) Create .gitignore and push Virtural Envir name into it (when first starting up -- you can use any name):
 ```echo "venvName/" > .gitignore```
     - You will need to add the names of the other folders you don't want to track into this 
 <br>
 <br>
 
-2) Create New Virtural Envir. (when first starting up -- you can use any name) 
+2) Create New Virtural Envir. (use same name as you did in the .gitignore) 
     - If python2 and python3 is installed:
         ```python3 -m venv venvName```
     - Else:
@@ -33,7 +33,10 @@
 
 5) Deactivate Virtual Envir:
 ```deactivate```
+<br>
+<br>
 
+> From: https://realpython.com/python-virtual-environments-a-primer/
 ------------------------------
 
 
@@ -49,8 +52,17 @@
 
 
 ------------------------------
-From:
-https://realpython.com/python-virtual-environments-a-primer/
+
+
+## Check which python version you are using:
+- If both python2 and python3 are installed:
+    ```which python3```
+- Else:
+    ```which python```
+- You want the version of python to be the one inside your project folder
+
+
+------------------------------
 
 <br>
 
