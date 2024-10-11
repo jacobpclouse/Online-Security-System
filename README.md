@@ -27,6 +27,8 @@
 - SQLite (for Database)
 
 ## Sources:
+- BASIS Transfer video over sockets from multiple clients: https://pyshine.com/Socket-Programming-with-multiple-clients/
+- BASIS YT Video: https://youtu.be/1skHb3IjOr4
 - Developing a Live Video Streaming Application using Socket Programming with Python: https://medium.com/nerd-for-tech/developing-a-live-video-streaming-application-using-socket-programming-with-python-6bc24e522f19
 - OpenCV live stream video over socket in Python 3: https://stackoverflow.com/questions/49084143/opencv-live-stream-video-over-socket-in-python-3
 - Streaming and Saving Video (Web Cam) with OpenCV and : https://www.youtube.com/watch?v=ChWvD3C7SgE
