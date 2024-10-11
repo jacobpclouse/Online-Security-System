@@ -8,11 +8,12 @@
 1) Create .gitignore and push Virtural Envir name into it (when first starting up -- you can use any name):
 ```echo "venvName/" > .gitignore```
     - You will need to add the names of the other folders you don't want to track into this 
+    - if you are cloning this branch, you will already have a .gitignore so you can skip this step
 <br>
 <br>
 
 2) Create New Virtural Envir. (use same name as you did in the .gitignore) 
-    - If python2 and python3 is installed:
+    - If python2 and python3 are installed:
         ```python3 -m venv venvName```
     - Else:
         ```python -m venv venvName```
@@ -28,6 +29,7 @@
 
 4) Install Packages inside it:
 ```python -m pip install <package-name>```
+
 <br>
 <br>
 

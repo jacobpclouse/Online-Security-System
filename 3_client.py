@@ -4,15 +4,16 @@
 # Welcome to PyShine
 # lets make the client code
 # In this code client is sending video to server
-import socket, cv2, pickle, struct
+import socket, pickle, struct
 import pyshine as ps  # pip install pyshine
 import imutils  # pip install imutils
+import cv2
 
 camera = True
 if camera == True:
     vid = cv2.VideoCapture(0)
 else:
-    vid = cv2.VideoCapture("20200918_180906000_iOS.mp4")
+    vid = cv2.VideoCapture("1.mp4")
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host_ip = "127.0.0.1"  # Here according to your server ip write the address
 

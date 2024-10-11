@@ -1,15 +1,19 @@
-import socket, cv2, pickle, struct
-import imutils
+import socket, pickle, struct
+#import imutils
 import threading
 import pyshine as ps  # pip install pyshine
 import cv2
 
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# this hostname will be used later to get the host of the current computer and then use that as the host ip
+# for now, we use localhost or 127.0.0.1
 host_name = socket.gethostname()
 host_ip = socket.gethostbyname(host_name)
 print("HOST IP:", host_ip)
+
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 port = 9999
-# socket_address = (host_ip,port)
+# socket_address = (host_ip,port) # when deploying to a real server, use this
 socket_address = ("127.0.0.1", port)
 
 server_socket.bind(socket_address)
