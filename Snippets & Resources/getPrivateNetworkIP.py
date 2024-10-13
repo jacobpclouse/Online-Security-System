@@ -1,5 +1,7 @@
 import socket
 
+# host_ip = socket.gethostbyname(host_name) # will not get the correct ip, gets sever IP
+
 def get_private_ip():
     try:
         # Connect to an external server (Google's DNS server in this case)

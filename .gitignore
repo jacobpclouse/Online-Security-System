@@ -3,3 +3,7 @@ venvPycharm/
 *.mp4
 *.avi
 .idea/
+.pyc
+OUTPUTS
+CLIENT_VIDEO_STORAGE
+Utility_Functions/__pycache__/

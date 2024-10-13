@@ -1,9 +1,18 @@
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Importing Libraries / Modules
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 import socket, pickle, struct
 #import imutils
 import threading
 import pyshine as ps  # pip install pyshine
-import cv2
+import cv2 # pip install opencv-python
+import os
 
+from Utility_Functions.generalFunctions import myLogo, defang_datetime, createFolderIfNotExists, sanitize_filename, emptyFolder
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Functions
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 #get private ip inside network of the server computer
 def get_private_ip():
     try:
@@ -18,24 +27,6 @@ def get_private_ip():
         return private_ip
     except Exception as e:
         return f"Unable to get IP: {e}"
-
-# this hostname will be used later to get the host of the current computer and then use that as the host ip
-# for now, we use localhost or 127.0.0.1
-
-# host_ip = socket.gethostbyname(host_name) # will not get the correct ip, gets sever IP
-host_ip = get_private_ip()
-print("HOST IP:", host_ip)
-
-
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-port = 9999
-socket_address = (host_ip,port) # when deploying to a real server, use this -- gets wrong ip? gets ip of network?
-#socket_address = ("127.0.0.1", port)
-# socket_address = ("192.168.1.4", port) # for private ip, the other
-
-server_socket.bind(socket_address)
-server_socket.listen()
-print(f"Listening at: {socket_address}")
 
 # Function to handle client connection
 def show_client(addr, client_socket):
@@ -82,7 +73,9 @@ def show_client(addr, client_socket):
                 # If VideoWriter is not initialized, initialize it
                 if out is None:
                     height, width, _ = frame.shape
-                    out = cv2.VideoWriter(f'client_{addr[1]}.mp4', fourcc, 20.0, (width, height))
+                    # out = cv2.VideoWriter(f'client_{addr[1]}.mp4', fourcc, 20.0, (width, height))# write videoes to storage - orig
+                    createFolderIfNotExists(OUTPUT_FOLDER_NAME)
+                    out = cv2.VideoWriter(os.path.join(OUTPUT_FOLDER_NAME,f'client_{addr[1]}{defang_datetime()}.mp4'), fourcc, 20.0, (width, height))# write videoes to storage
 
                 # Write frame to video file
                 out.write(frame)
@@ -101,6 +94,31 @@ def show_client(addr, client_socket):
     except Exception as e:
         print(f"CLIENT {addr} DISCONNECTED: {e}")
         pass
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# GLOBAL Variables
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+OUTPUT_FOLDER_NAME = 'CLIENT_VIDEO_STORAGE'  # folder where all the output files should be stored
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# MAIN
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+myLogo() 
+createFolderIfNotExists(OUTPUT_FOLDER_NAME) # create a folder to store outputs in if one doesn't exist already
+
+# for now, we use localhost or 127.0.0.1
+host_ip = '127.0.0.1'
+port = 9999
+#host_ip = get_private_ip() # this hostname will be used later to get the host of the current computer and then use that as the host ip
+print(f"HOST IP:{host_ip}, PORT: {port}")
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+socket_address = (host_ip,port)
+server_socket.bind(socket_address)
+server_socket.listen()
+print(f"Listening at: {socket_address}")
 
 # Main loop to accept clients
 while True:
