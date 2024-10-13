@@ -6,13 +6,26 @@ import time
 
 # --- Function to print out my Logo ---
 def myLogo():
-    print("Created and Tested by: ")
-    print("   __                  _         ___ _                       ")
-    print("   \ \  __ _  ___ ___ | |__     / __\ | ___  _   _ ___  ___  ")
-    print("    \ \/ _` |/ __/ _ \| '_ \   / /  | |/ _ \| | | / __|/ _ \ ")
-    print(" /\_/ / (_| | (_| (_) | |_) | / /___| | (_) | |_| \__ \  __/ ")
-    print(" \___/ \__,_|\___\___/|_.__/  \____/|_|\___/ \__,_|___/\___| ")
-    print("Dedicated to Mary Clouse and Harley Alderson III")
+    
+    print("Welcome to your very own:")
+    print("   ____        _ _               _____                      _ _            _____           _                 ")
+    print("  / __ \      | (_)             / ____|                    (_) |          / ____|         | |                ")
+    print(" | |  | |_ __ | |_ _ __   ___  | (___   ___  ___ _   _ _ __ _| |_ _   _  | (___  _   _ ___| |_ ___ _ __ ___  ")
+    print(" | |  | | '_ \| | | '_ \ / _ \  \___ \ / _ \/ __| | | | '__| | __| | | |  \___ \| | | / __| __/ _ \ '_ ` _ \ ")
+    print(" | |__| | | | | | | | | |  __/  ____) |  __/ (__| |_| | |  | | |_| |_| |  ____) | |_| \__ \ ||  __/ | | | | |")
+    print("  \____/|_| |_|_|_|_| |_|\___| |_____/ \___|\___|\__,_|_|  |_|\__|\__, | |_____/ \__, |___/\__\___|_| |_| |_|")
+    print("                                                                   __/ |          __/ |                      ")
+    print("                                                                  |___/          |___/                       ")
+    print("Safety through Vigilance! Dedicated to Mary Clouse and Harley Alderson III")
+
+
+    # print("Created and Tested by: ")
+    # print("   __                  _         ___ _                       ")
+    # print("   \ \  __ _  ___ ___ | |__     / __\ | ___  _   _ ___  ___  ")
+    # print("    \ \/ _` |/ __/ _ \| '_ \   / /  | |/ _ \| | | / __|/ _ \ ")
+    # print(" /\_/ / (_| | (_| (_) | |_) | / /___| | (_) | |_| \__ \  __/ ")
+    # print(" \___/ \__,_|\___\___/|_.__/  \____/|_|\___/ \__,_|___/\___| ")
+    # print("Dedicated to Mary Clouse and Harley Alderson III")
 
 
 # --- Function to Defang date time ---
@@ -95,7 +108,7 @@ def eye_animation():
     while time.time() - start_time < 3:
         for frame in frames:
             clear_screen()
-            print("Online security system: always watching\n")
+            print("Online security system: Safety through Vigilance!\n")
             print(frame)
             time.sleep(0.2)
 
