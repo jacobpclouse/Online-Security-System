@@ -4,21 +4,38 @@ import threading
 import pyshine as ps  # pip install pyshine
 import cv2
 
+#get private ip inside network of the server computer
+def get_private_ip():
+    try:
+        host_name = socket.gethostname()
+        print(f"Computer Hostname: {host_name}")
+
+        # Connect to an external server (Google's DNS server in this case)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        private_ip = s.getsockname()[0]
+        s.close()
+        return private_ip
+    except Exception as e:
+        return f"Unable to get IP: {e}"
+
 # this hostname will be used later to get the host of the current computer and then use that as the host ip
 # for now, we use localhost or 127.0.0.1
-host_name = socket.gethostname()
-host_ip = socket.gethostbyname(host_name)
+
+# host_ip = socket.gethostbyname(host_name) # will not get the correct ip, gets sever IP
+host_ip = get_private_ip()
 print("HOST IP:", host_ip)
 
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 port = 9999
-# socket_address = (host_ip,port) # when deploying to a real server, use this
-socket_address = ("127.0.0.1", port)
+socket_address = (host_ip,port) # when deploying to a real server, use this -- gets wrong ip? gets ip of network?
+#socket_address = ("127.0.0.1", port)
+# socket_address = ("192.168.1.4", port) # for private ip, the other
 
 server_socket.bind(socket_address)
 server_socket.listen()
-print("Listening at", socket_address)
+print(f"Listening at: {socket_address}")
 
 # Function to handle client connection
 def show_client(addr, client_socket):
