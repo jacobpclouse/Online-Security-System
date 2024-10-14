@@ -6,7 +6,7 @@ import os
 import json
 from datetime import datetime
 
-from Utility_Functions.generalFunctions import myLogo, defang_datetime, createFolderIfNotExists, sanitize_filename, emptyFolder, clear_screen, eye_animation
+from Utility_Functions.generalFunctions import myLogo, defang_datetime, createFolderIfNotExists, sanitize_filename, emptyFolder, clear_screen, eye_animation, get_private_ip
 
 def get_metadata(camera_name, camera_ip, location, start_time, stop_time):
     """Creates a metadata dictionary"""
@@ -81,7 +81,9 @@ def show_client(addr, client_socket):
                 if out is None:
                     height, width, _ = frame.shape
                     createFolderIfNotExists(OUTPUT_FOLDER_NAME)
-                    video_filename = os.path.join(OUTPUT_FOLDER_NAME, f'client_{addr[1]}_{defang_datetime()}.mp4')
+                    filename=f'{camera_name}_loc_{location}_time_{defang_datetime()}'
+                    video_filename = os.path.join(OUTPUT_FOLDER_NAME, f'{filename}.mp4')
+                    # video_filename = os.path.join(OUTPUT_FOLDER_NAME, f'client_{addr[1]}_{defang_datetime()}.mp4')
                     out = cv2.VideoWriter(video_filename, fourcc, 20.0, (width, height))
                 
                 # Write frame to video file
@@ -114,6 +116,7 @@ def show_client(addr, client_socket):
 OUTPUT_FOLDER_NAME = 'CLIENT_VIDEO_STORAGE'
 
 # Main loop
+eye_animation()
 myLogo() 
 createFolderIfNotExists(OUTPUT_FOLDER_NAME)
 host_ip = '127.0.0.1'
