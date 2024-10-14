@@ -4,6 +4,9 @@ import threading
 import cv2
 import os
 from datetime import datetime
+import pyshine as ps  # pip install pyshine
+
+from Utility_Functions.generalFunctions import myLogo, defang_datetime, createFolderIfNotExists, sanitize_filename, emptyFolder, clear_screen, eye_animation
 
 # need to adjust -
 # put back the text on screen with the location and ip
@@ -44,11 +47,28 @@ def show_client(addr, client_socket):
                     data = data[msg_size:]
                     frame = pickle.loads(frame_data)
 
+
+                    # Write text on frame for display --
+                    text = f"CLIENT: {addr}"
+                    frame = ps.putBText(
+                        frame,
+                        text,
+                        10,
+                        10,
+                        vspace=10,
+                        hspace=1,
+                        font_scale=0.7,
+                        background_RGB=(255, 0, 0),
+                        text_RGB=(255, 250, 250),
+                    ) # ---
+
+
                     # Initialize VideoWriter only once, with the metadata information in the filename
                     if out is None:
                         height, width, _ = frame.shape
                         output_filename = f"{metadata['camera_name']}_{metadata['location']}_{metadata['start_time'].replace(':', '-')}.mp4"
-                        out = cv2.VideoWriter(output_filename, fourcc, 20.0, (width, height))
+                        out = cv2.VideoWriter(os.path.join(OUTPUT_FOLDER_NAME,output_filename), fourcc, 20.0, (width, height))
+                        # out = cv2.VideoWriter(output_filename, fourcc, 20.0, (width, height))
 
                     # Write frame to video file
                     out.write(frame)
@@ -58,6 +78,7 @@ def show_client(addr, client_socket):
 
                     key = cv2.waitKey(1) & 0xFF
                     if key == ord('q'):
+                        print("Stopping Server...")
                         break
 
                 except socket.error as e:
@@ -77,6 +98,7 @@ def show_client(addr, client_socket):
 
 # Main server code to accept clients
 def start_server(host_ip='127.0.0.1', port=9999):
+    createFolderIfNotExists(OUTPUT_FOLDER_NAME)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket_address = (host_ip, port)
     server_socket.bind(socket_address)
@@ -91,5 +113,11 @@ def start_server(host_ip='127.0.0.1', port=9999):
         thread.start()
         print("TOTAL CLIENTS ", threading.active_count() - 1)
 
+
+OUTPUT_FOLDER_NAME = 'CLIENT_VIDEO_STORAGE'  # folder where all the output files should be stored
+
 if __name__ == "__main__":
+    eye_animation()
+    myLogo() 
+    createFolderIfNotExists(OUTPUT_FOLDER_NAME) # create a folder to store outputs in if one doesn't exist already
     start_server()

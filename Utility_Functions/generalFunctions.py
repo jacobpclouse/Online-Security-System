@@ -3,6 +3,22 @@ import os
 import re
 from pathlib import Path # used to delete old files in folder
 import time
+import socket
+
+#get private ip inside network of the server computer
+def get_private_ip():
+    try:
+        host_name = socket.gethostname()
+        print(f"Computer Hostname: {host_name}")
+
+        # Connect to an external server (Google's DNS server in this case)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        private_ip = s.getsockname()[0]
+        s.close()
+        return private_ip
+    except Exception as e:
+        return f"Unable to get IP: {e}"
 
 # --- Function to print out my Logo ---
 def myLogo():
@@ -18,14 +34,6 @@ def myLogo():
     print("                                                                  |___/          |___/                       ")
     print("Safety through Vigilance! Dedicated to Mary Clouse and Harley Alderson III")
 
-
-    # print("Created and Tested by: ")
-    # print("   __                  _         ___ _                       ")
-    # print("   \ \  __ _  ___ ___ | |__     / __\ | ___  _   _ ___  ___  ")
-    # print("    \ \/ _` |/ __/ _ \| '_ \   / /  | |/ _ \| | | / __|/ _ \ ")
-    # print(" /\_/ / (_| | (_| (_) | |_) | / /___| | (_) | |_| \__ \  __/ ")
-    # print(" \___/ \__,_|\___\___/|_.__/  \____/|_|\___/ \__,_|___/\___| ")
-    # print("Dedicated to Mary Clouse and Harley Alderson III")
 
 
 # --- Function to Defang date time ---
@@ -114,7 +122,7 @@ def eye_animation():
 
     # After the animation, clear the screen and show "LOADING"
     clear_screen()
-    print("LOADING")
+    print("--- === --- START SERVER LOG --- === ---")
 
-eye_animation()
+#eye_animation()
 

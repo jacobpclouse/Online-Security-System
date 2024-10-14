@@ -64,6 +64,7 @@ if client_socket:
             cv2.imshow(f"TO: {host_ip}", frame)
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
+                print("Closing Socket...")
                 client_socket.close()
         except:
             print("VIDEO FINISHED!")

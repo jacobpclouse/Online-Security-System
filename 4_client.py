@@ -59,7 +59,7 @@ if client_socket:
             # print(f'frame: {frame}') # debug, print out frame
 
             if not img:
-                print("Error: Failed to grab frame. Ending video stream.")
+                print("Error: Failed to grab frame. Ending video stream.") # for videos, it may just be that it hits the end of the video
                 print(f'BAD img: {img}') # debug, print out image
                 print(f'BAD frame: {frame}') # debug, print out frame
                 break
