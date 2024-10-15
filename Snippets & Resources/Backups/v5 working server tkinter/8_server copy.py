@@ -24,10 +24,6 @@ OUTPUT_FOLDER_NAME = 'CLIENT_VIDEO_STORAGE'
 clients = []  # Store client threads and related data
 frames = {}   # Store frames for each client
 
-# eye_animation()
-# myLogo() 
-createFolderIfNotExists(OUTPUT_FOLDER_NAME)
-
 def get_metadata(camera_name, camera_ip, location, start_time, stop_time):
     """Creates a metadata dictionary"""
     metadata = {
@@ -54,10 +50,7 @@ def show_client(addr, client_socket):
             metadata_bytes = client_socket.recv(metadata_size)
             client_metadata = pickle.loads(metadata_bytes)
 
-            print(f"Received metadata from client {addr}: {client_metadata}")
-
             camera_name = client_metadata["camera_name"]
-            camera_ip = client_metadata["camera_ip"]
             location = client_metadata["location"]
             start_time = datetime.now()  # Start time
             
@@ -84,41 +77,6 @@ def show_client(addr, client_socket):
                 data = data[msg_size:]
                 frame = pickle.loads(frame_data)
 
-                # Write text on frame for display -- top text
-                text = f"IP: {addr} | Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-                # text = f"CLIENT: {addr} | Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" # OLD
-                frame = ps.putBText(
-                    frame,
-                    text,
-                    10,
-                    10,
-                    vspace=10,
-                    hspace=1,
-                    font_scale=0.7,
-                    background_RGB=(0, 0, 0),
-                    text_RGB=(255, 250, 250),
-                    alpha=0.5
-                )
-
-                # Metadata to display on the frame -- bottom text
-                text2 = f"CAM: {camera_name} | Location: {location}"
-                # text2 = f"CAM: {camera_name} | Location: {location} | IP: {camera_ip} "
-                height, width, _ = frame.shape# Get the dimensions of the frame
-                # Adjust Y-position to place the text at the bottom of the frame
-                text_y_position = height - 50  # Adjust this value to fine-tune the position
-                # Display the text at the bottom
-                frame = ps.putBText(
-                    frame,
-                    text2,
-                    10, text_y_position,  # X and Y position (bottom)
-                    vspace=5,
-                    hspace=2,
-                    font_scale=0.7,  # Smaller font scale for compactness
-                    background_RGB=(0, 0, 0),  # Semi-transparent black background
-                    text_RGB=(255, 255, 255),  # White text
-                    alpha=0.5  # Transparent background to avoid covering too much of the video
-                )
-
                 # Save frame for Tkinter display
                 frames[addr] = frame
 
@@ -143,8 +101,6 @@ def show_client(addr, client_socket):
             metadata_filename = video_filename.replace('.mp4', '.json')  # Save metadata with same name as video
             save_metadata(metadata, metadata_filename)
 
-            # you will eventually put the db stuff here
-
         # Clean up when the client disconnects
         del frames[addr]  # Remove frame when client disconnects
         client_socket.close()
@@ -154,8 +110,8 @@ def show_client(addr, client_socket):
         if addr in frames:
             del frames[addr]  # Remove frame if an exception occurs
 
-def update_display(): ## MAKE THE VIDEOS WRAP INSTEAD OF GO OFF THE SCREEN IN THE SAME ROW
-    """Update the displayed frames in the Tkinter window.""" 
+def update_display():
+    """Update the displayed frames in the Tkinter window."""
     for addr in list(frames.keys()):  # Use list to avoid modifying dict during iteration
         frame = frames[addr]
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
@@ -184,8 +140,6 @@ def update_display(): ## MAKE THE VIDEOS WRAP INSTEAD OF GO OFF THE SCREEN IN TH
 
 def start_server():
     """Start the server to accept incoming client connections."""
-    eye_animation("--- === --- START SERVER LOG --- === ---")
-    myLogo() 
     host_ip = '127.0.0.1'
     port = 9999
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -210,13 +164,12 @@ def on_stop():
     for client in clients:
         client.join()  # Wait for all threads to finish
     messagebox.showinfo("Server Status", "Server has been stopped.")
-    eye_animation("SERVER HAS BEEN STOPPED. Close out of the Tkinter window to exit!")
     start_button.config(state=tk.NORMAL)  # Enable start button
     stop_button.config(state=tk.DISABLED)  # Disable stop button
 
 # Setup Tkinter window
 root = tk.Tk()
-root.title("Online Security System")
+root.title("Video Stream Server")
 video_frame = tk.Frame(root)
 video_frame.pack()
 

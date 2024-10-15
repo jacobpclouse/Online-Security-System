@@ -72,7 +72,7 @@ def clear_screen():
     # Clears the terminal screen
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def eye_animation():
+def eye_animation(inputText='LOADING'):
     # got eye template from: https://emojicombos.com/eye-ascii-art
     frames = [
         '''
@@ -122,7 +122,8 @@ def eye_animation():
 
     # After the animation, clear the screen and show "LOADING"
     clear_screen()
-    print("--- === --- START SERVER LOG --- === ---")
+    print(inputText)
+    # print("--- === --- START SERVER LOG --- === ---")
 
 #eye_animation()
 
