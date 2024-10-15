@@ -63,8 +63,9 @@ def show_client(addr, client_socket):
                 data = data[msg_size:]
                 frame = pickle.loads(frame_data)
 
-                # Write text on frame for display
-                text = f"CLIENT: {addr}"
+                # Write text on frame for display -- top text
+                text = f"IP: {addr} | Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                # text = f"CLIENT: {addr} | Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" # OLD
                 frame = ps.putBText(
                     frame,
                     text,
@@ -73,8 +74,28 @@ def show_client(addr, client_socket):
                     vspace=10,
                     hspace=1,
                     font_scale=0.7,
-                    background_RGB=(255, 0, 0),
+                    background_RGB=(0, 0, 0),
                     text_RGB=(255, 250, 250),
+                    alpha=0.5
+                )
+
+                # Metadata to display on the frame -- bottom text
+                text2 = f"CAM: {camera_name} | Location: {location}"
+                # text2 = f"CAM: {camera_name} | Location: {location} | IP: {camera_ip} "
+                height, width, _ = frame.shape# Get the dimensions of the frame
+                # Adjust Y-position to place the text at the bottom of the frame
+                text_y_position = height - 50  # Adjust this value to fine-tune the position
+                # Display the text at the bottom
+                frame = ps.putBText(
+                    frame,
+                    text2,
+                    10, text_y_position,  # X and Y position (bottom)
+                    vspace=5,
+                    hspace=2,
+                    font_scale=0.7,  # Smaller font scale for compactness
+                    background_RGB=(0, 0, 0),  # Semi-transparent black background
+                    text_RGB=(255, 255, 255),  # White text
+                    alpha=0.5  # Transparent background to avoid covering too much of the video
                 )
                 
                 # Initialize VideoWriter if not already done
@@ -93,6 +114,7 @@ def show_client(addr, client_socket):
                 cv2.imshow(f"FROM {addr}", frame)
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord("q"):
+                    print("Breaking...")
                     break
 
             stop_time = datetime.now()  # Stop time

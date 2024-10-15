@@ -30,8 +30,7 @@ incomingIP, incomingPort, incomingTestVideo = returnIPandPort()
 # If no test video provided, use the webcam
 if incomingTestVideo is None:
     camera = True
-    vid = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # Use DirectShow backend -- may be more reliable
-    # vid = cv2.VideoCapture(0)
+    vid = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # Use DirectShow backend -- may be more reliable  then  # vid = cv2.VideoCapture(0)
     # Metadata for the client -- with Camera
     camera_name = "ClientCamera1"  # Example camera name
     camera_ip = get_private_ip() 
@@ -41,14 +40,9 @@ else:
     vid = cv2.VideoCapture(incomingTestVideo)
     # Metadata for the client -- WITHOUT Camera
     camera_name = socket.gethostname()  # Example camera name
-    camera_ip = get_private_ip()  # Example camera IP (could be dynamic)
+    camera_ip = get_private_ip() 
     location = "VIDEO-STREAM"  # Example location
 
-# # Open camera or video file
-# if camera:
-#     vid = cv2.VideoCapture(0)
-# else:
-#     vid = cv2.VideoCapture(incomingTestVideo)
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host_ip = incomingIP  # Server IP address
@@ -59,11 +53,13 @@ client_socket.connect((host_ip, port))
 # Send metadata to server
 send_metadata(client_socket, camera_name, camera_ip, location)
 
+widthOfFrame = 720 # 380 is orig -- bigger makes it chug
+
 if client_socket:
     while vid.isOpened():
         try:
             img, frame = vid.read()
-            frame = imutils.resize(frame, width=380)
+            frame = imutils.resize(frame, width=widthOfFrame)
             a = pickle.dumps(frame)
             message = struct.pack("Q", len(a)) + a
             client_socket.sendall(message)

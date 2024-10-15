@@ -113,7 +113,7 @@ def eye_animation():
     ]
 
     start_time = time.time()
-    while time.time() - start_time < 3:
+    while time.time() - start_time < 2:
         for frame in frames:
             clear_screen()
             print("Online security system: Safety through Vigilance!\n")
