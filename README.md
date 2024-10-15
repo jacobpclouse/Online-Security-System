@@ -2,43 +2,52 @@
 
 ## Overview:
 - This client/server system should allow for a user to hook up multiple cameras and stream this data to a server that saves it for later
-- System developed and run on: Linux (Debian/Ubuntu Based)
+- System developed and run on: Windows 10, Linux (Debian/Ubuntu Based)
 
 ## Goals / Progression:
 - [x] Created client and server files, setup .gitignore
 - [x] Setup Virtual Environment that works (either PyCharm or vsCode Extensions)
 - [x] Able to stream live video from single client to single server, no sound
 - [x] Allow port number and IP to be specified in bash command line as arguments (ie: python3 client.py 192.168.1.3 1025)
-- [ ] Able to save video feed from client to server for playback after stream ends, unique filename, no corruption
-- [ ] Add Time Stamps and Location in video feed (on Client end)
-- [ ] Log entries into database (meta data)
+- [x] Able to save video feed from client to server for playback after stream ends, unique filename, no corruption
+- [x] Add Time Stamps and Location in video feed (did it on the server instead of the client)
+- [x] Allow for the use of multiple client streams with a central socket server (can add/remove clients without disruptions)
+- [ ] Create Tkinter interfaces for client and server for user to put in their ip and port (default to localhost and 9999)
+- * [ ] And also have a box on top that shows the current private ip of the machine
+- * [ ] Put safeguards on the client and server so that if the input is not filled in or it is invalid it errors out and exits
+- * [ ] Have a toggle button for the client to not show the feed that it is transmitting (lower power pc)
+- * [x] Have a cut down console only client that the user passes ip and port into (and optionally video stream) as command line args
+- [ ] Log entries into sqlite or postgres database (meta data like location, time start, time end, camera name, ip, etc)
 - [ ] Set client cameras to retry like 5 times and then give up and stop execution.
+- [ ] Add global variables to define resolution (height width) of video, how many retry attempts, name of json for client, etc
 - [ ] Organize ongoing/saved feeds in database with timestamps, name, location, duration, etc.
+- [ ] Setup Django/Flask so it can access the db across the network (not just locally on the same machine)
 - [ ] Setup Email Alerts to admin email to inform of new clients/client shutdowns and outages via Sendgrid API (socket server)
-- [ ] Use Django (or Flask) web server (WITH LOGIN) to access videos and play them in browser (seperate user DB, salt & hash)
+- [ ] Use Django (or Flask) web server (WITH LOGIN) to access videos and play them in browser (seperate user DB, salt & hash) - Quasar Frontend
 - [ ] Let users organize videos and query the db to filter videos by length, location, or timestamps
-- [ ] Allow users to control socket server and socket clients from Django Web GUI (ie: terminate connections, start connections)
-- [ ] Allow for the use of multiple client streams with a central socket server (can add/remove clients without disruptions)
-- [ ] Use bootstrap and Css to make front end responsive and organized
+- [ ] Use Quasar/Vue.js in conjunction with Bootstrap to create a pretty/easy to use front end for the web client
 - [ ] Beautify the interface for the client, allow user to specify location info and potentially camera selection
-- [ ] Beautify the server interface (buttons start stop), and have it log meta data info about cameras with the feeds (and save the feeds in folders for each camera), add camera name and start to the name of feed and list start and stop times of feeds
+- [ ] Beautify the server interface with Tkinter(more than just start/stop buttons)
 - [ ] Add motion detection in web interface so users can apply to camera feeds
+- [ ] Add mp4 to other video format converter/vise versa so users can convert video to format that works on their device (outside scope?)
 - [ ] __OPTIONAL:__ Add Facial recognition to clients so they can identify who is in frame
 - [ ] __OPTIONAL:__ Use Facial recognition on web GUI for login 
+- [ ] __OPTIONAL:__ Integrate Terminal inside of Tkinter window
+- [ ] __OPTIONAL:__ Find a way to Geotag videos recorded with webcams using network location/gps
+- [ ] __OPTIONAL:__ Find a way to link metadata to video without using the video name of the .mp4 as the primary key (can rename and won't break this way)
+- [ ] __OPTIONAL:__ Allow users to control socket server and socket clients from Tkinter GUI (ie: terminate connections, start connections) - Remote camera start/stop
 
 ## Target Technologies:
 - Python 3.8 - (OpenCV, Sockets)
-- Flask (for Web GUI)
-- SQLite (for Database)
+- Tkinter (for Client/Server GUI)
+- Flask or Django (for Web back end)
+- Quasar/Vue.js (for Web GUI front end)
+- SQLite or Postgress (for Database)
 
-## Sources:
-- BASIS Transfer video over sockets from multiple clients: https://pyshine.com/Socket-Programming-with-multiple-clients/
-- BASIS YT Video: https://youtu.be/1skHb3IjOr4
-- Developing a Live Video Streaming Application using Socket Programming with Python: https://medium.com/nerd-for-tech/developing-a-live-video-streaming-application-using-socket-programming-with-python-6bc24e522f19
-- OpenCV live stream video over socket in Python 3: https://stackoverflow.com/questions/49084143/opencv-live-stream-video-over-socket-in-python-3
-- Streaming and Saving Video (Web Cam) with OpenCV and : https://www.youtube.com/watch?v=ChWvD3C7SgE
-- How to record video from a webcam using Python & OpenCV: https://www.youtube.com/watch?v=frYotHLJ-Rc
-- Python Virtual Environments: A Primer: https://realpython.com/python-virtual-environments-a-primer/
-- Git CheatSheet PDF: https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet
-- cv2 import error in virtual environment: https://stackoverflow.com/questions/35010064/cv2-import-error-in-virtual-environment
-- Basic writing and formatting syntax: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
+### Sources used are listed in Snippets & Resources
+
+## Testing:
+When we are done with programing a build, we should test the client/server using x3 computers (two clients and a server):
+- one run with all windows pcs, all webcam streams first, have client 1 join, then client 2 join, client 1 leave then client 1 join back, client 2 leave, then try streaming vides
+- then do another test but this have one of the clients be a linux pc (otherwise same procedure as above)
+- then another were the server is a linux pc (otherwise same procedure as above)
