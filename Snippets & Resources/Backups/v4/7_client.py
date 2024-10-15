@@ -53,7 +53,7 @@ client_socket.connect((host_ip, port))
 # Send metadata to server
 send_metadata(client_socket, camera_name, camera_ip, location)
 
-widthOfFrame = 400 # 380 is orig -- bigger makes it chug
+widthOfFrame = 720 # 380 is orig -- bigger makes it chug
 
 if client_socket:
     while vid.isOpened():
