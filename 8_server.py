@@ -142,6 +142,7 @@ def show_client(addr, client_socket):
             metadata = get_metadata(camera_name, '', location, start_time, stop_time)
             metadata_filename = video_filename.replace('.mp4', '.json')  # Save metadata with same name as video
             save_metadata(metadata, metadata_filename)
+            ## SAVING METADATA HAS ISSUES, it doesn't update with the end time of the stream correctly, says videos are seconds long while they are actually minutes, dont know why
 
             # you will eventually put the db stuff here
 

@@ -12,9 +12,9 @@
 - [x] Able to save video feed from client to server for playback after stream ends, unique filename, no corruption
 - [x] Add Time Stamps and Location in video feed (did it on the server instead of the client)
 - [x] Allow for the use of multiple client streams with a central socket server (can add/remove clients without disruptions)
-- [ ] Create Tkinter interfaces for client and server for user to put in their ip and port (default to localhost and 9999)
-- * [ ] And also have a box on top that shows the current private ip of the machine
-- * [ ] Put safeguards on the client and server so that if the input is not filled in or it is invalid it errors out and exits
+- [x] Create Tkinter interfaces for client and server for user to put in their ip and port (default to localhost and 9999)
+- * [x] And also have a box on top that shows the current private ip of the machine
+- * [x] Put safeguards on the client and server so that if the input is not filled in or it is invalid it errors out and exits
 - * [ ] Have a toggle button for the client to not show the feed that it is transmitting (lower power pc)
 - * [x] Have a cut down console only client that the user passes ip and port into (and optionally video stream) as command line args
 - [ ] Log entries into sqlite or postgres database (meta data like location, time start, time end, camera name, ip, etc)
@@ -51,3 +51,6 @@ When we are done with programing a build, we should test the client/server using
 - one run with all windows pcs, all webcam streams first, have client 1 join, then client 2 join, client 1 leave then client 1 join back, client 2 leave, then try streaming vides
 - then do another test but this have one of the clients be a linux pc (otherwise same procedure as above)
 - then another were the server is a linux pc (otherwise same procedure as above)
+
+## Bugs:
+- Currently looks like the start and stop times are not written correctly (videos that are minutes long are only logged as being seconds long)
