@@ -32,6 +32,7 @@ incomingIP, incomingPort, incomingTestVideo = returnIPandPort()
 
 # If no test video provided, use the webcam
 if incomingTestVideo is None:
+    print("NONE")
     camera = True
     vid = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # Use DirectShow backend -- may be more reliable  then  # vid = cv2.VideoCapture(0)
     # Metadata for the client -- with Camera

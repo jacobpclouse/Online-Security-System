@@ -11,27 +11,21 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import pyshine as ps  # pip install pyshine
 
+from Utility_Functions.generalFunctions import (myLogo, defang_datetime,
+                                                createFolderIfNotExists, sanitize_filename,
+                                                emptyFolder, clear_screen, eye_animation, get_private_ip)
+
 OUTPUT_FOLDER_NAME = 'CLIENT_VIDEO_STORAGE'
 clients = []
 frames = {}
+createFolderIfNotExists(OUTPUT_FOLDER_NAME)
 
 # add back in animations, add back in overlay
 # put buttons on top with the ip entries
 # localhost doesn't work initially until you add a character and remove a char
 # add framerate to the display!!!
+# stop time not logging correctly
 
-def get_private_ip():
-    """Gets the private IP of the server computer"""
-    try:
-        host_name = socket.gethostname()
-        print(f"Computer Hostname: {host_name}")
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        private_ip = s.getsockname()[0]
-        s.close()
-        return private_ip
-    except Exception as e:
-        return f"Unable to get IP: {e}"
 
 def get_metadata(camera_name, camera_ip, location, start_time, stop_time):
     """Creates a metadata dictionary"""
@@ -57,6 +51,8 @@ def show_client(addr, client_socket):
             metadata_size = struct.unpack("Q", client_socket.recv(struct.calcsize("Q")))[0]
             metadata_bytes = client_socket.recv(metadata_size)
             client_metadata = pickle.loads(metadata_bytes)
+
+            print(f"Received metadata from client {addr}: {client_metadata}")
 
             camera_name = client_metadata["camera_name"]
             location = client_metadata["location"]
@@ -85,11 +81,50 @@ def show_client(addr, client_socket):
                 data = data[msg_size:]
                 frame = pickle.loads(frame_data)
 
+                # turn below into a function
+                # Write text on frame for display -- top text
+                text = f"IP: {addr} | Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                # text = f"CLIENT: {addr} | Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" # OLD
+                frame = ps.putBText(
+                    frame,
+                    text,
+                    10,
+                    10,
+                    vspace=10,
+                    hspace=1,
+                    font_scale=0.7,
+                    background_RGB=(0, 0, 0),
+                    text_RGB=(255, 250, 250),
+                    alpha=0.5
+                )
+
+                # Metadata to display on the frame -- bottom text
+                text2 = f"CAM: {camera_name} | Location: {location}"
+                # text2 = f"CAM: {camera_name} | Location: {location} | IP: {camera_ip} "
+                height, width, _ = frame.shape# Get the dimensions of the frame
+                # Adjust Y-position to place the text at the bottom of the frame
+                text_y_position = height - 50  # Adjust this value to fine-tune the position
+                # Display the text at the bottom
+                frame = ps.putBText(
+                    frame,
+                    text2,
+                    10, text_y_position,  # X and Y position (bottom)
+                    vspace=5,
+                    hspace=2,
+                    font_scale=0.7,  # Smaller font scale for compactness
+                    background_RGB=(0, 0, 0),  # Semi-transparent black background
+                    text_RGB=(255, 255, 255),  # White text
+                    alpha=0.5  # Transparent background to avoid covering too much of the video
+                )
+
+
                 frames[addr] = frame
 
+                filename = f'{camera_name}_loc_{location}_time_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
+                video_filename = os.path.join(OUTPUT_FOLDER_NAME, filename)
                 if out is None:
-                    filename = f'{camera_name}_loc_{location}_time_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
-                    video_filename = os.path.join(OUTPUT_FOLDER_NAME, filename)
+                    # filename = f'{camera_name}_loc_{location}_time_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
+                    # video_filename = os.path.join(OUTPUT_FOLDER_NAME, filename)
                     out = cv2.VideoWriter(video_filename, fourcc, 20.0, (frame.shape[1], frame.shape[0]))
                 
                 out.write(frame)
@@ -150,6 +185,8 @@ def validate_ip_port():
 
 def start_server():
     """Start the server with the user-defined IP and port."""
+    eye_animation("--- === --- START SERVER LOG --- === ---")
+    myLogo() 
     ip = ip_entry.get()
     port = int(port_entry.get())
 
@@ -176,12 +213,13 @@ def on_stop():
     for client in clients:
         client.join()
     messagebox.showinfo("Server Status", "Server has been stopped.")
+    eye_animation("SERVER HAS BEEN STOPPED. Close out of the Tkinter window to exit!")
     start_button.config(state=tk.NORMAL)
     stop_button.config(state=tk.DISABLED)
 
 # Setup Tkinter window
 root = tk.Tk()
-root.title("Video Stream Server")
+root.title("Online Security System")
 
 # Display private IP
 private_ip_label = tk.Label(root, text=f"Private IP: {get_private_ip()}")
