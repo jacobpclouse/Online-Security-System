@@ -12,7 +12,7 @@
 - [x] Able to save video feed from client to server for playback after stream ends, unique filename, no corruption
 - [x] Add Time Stamps and Location in video feed
 - * [x] Add framerate display in the feed
-- * [ ] Have preview images on client before streaming (grey color box around outside then red for recording)
+- * [x] Have preview images on client before streaming (grey color box around outside then red for recording)
 - [ ] Add logic to only include webcams that aren't currently streaming or in use
 - [x] Allow for the use of multiple client streams with a central socket server (can add/remove clients without disruptions)
 - [x] Create Tkinter interfaces for client and server for user to put in their ip and port (default to localhost and 9999)
@@ -63,5 +63,5 @@ When we are done with programing a build, we should test the client/server using
 
 ## Bugs:
 - Currently looks like the start and stop times are not written correctly (videos that are minutes long are only logged as being seconds long)
-- Way that ip is passed in tkinter is not correct, formatting checks not working
-- console only application is not passing video to the server correctly, it is able to pass pre made video though
+- console only application is not passing video to the server correctly, it is able to pass pre made video though 
+- reconnecting doesn't seem to be working, i need to adjust it so that if the client loses connection to the server it will try again and again to reconnect until it hits its timeout limit
