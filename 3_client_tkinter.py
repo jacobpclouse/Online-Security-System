@@ -20,7 +20,6 @@ def get_available_webcams():
     for i in range(10):  # Check the first 10 indices
         cap = cv2.VideoCapture(i)
         if cap.isOpened():
-            # webcams.append(f"Webcam {i}")
             webcams.append(i)
             cap.release()  # Release the camera
     print('--- === --- === ------ === --- === ------ === --- === ---')
@@ -65,8 +64,6 @@ def start_client():
     # If webcam is selected
     if incomingTestVideo is None:
         camera = True
-        # selected_webcam_index = webcam_dropdown.current()  # Selected webcam index
-        # vid = cv2.VideoCapture(selected_webcam_index)
         selected_webcam_value = webcam_dropdown.get()  # Get the selected webcam value
         selected_webcam_split = int(selected_webcam_value.split(' ')[-1])  # Extract the index from the value
         vid = cv2.VideoCapture(selected_webcam_split)
@@ -75,10 +72,26 @@ def start_client():
 
     # Set up client socket
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect((ip, port))
+    
+    # Attempt to connect to the server with reconnection logic
+    for attempt in range(5):
+        try:
+            client_socket.connect((ip, port))
+            break  # Exit loop if connection is successful
+        except Exception:
+            reconnect_label.config(text=f"RECONNECTING, attempt number {attempt + 1}")
+            root.update()  # Update the Tkinter window
+            threading.Event().wait(1)  # Wait for 1 second before retrying
+    else:
+        messagebox.showerror("Connection Error", "Failed to connect to the server after 5 attempts.")
+        return
 
     # Send metadata to server
-    send_metadata(client_socket, "ClientCamera", get_private_ip(), "Office_1")
+    if incomingTestVideo is None:
+        send_metadata(client_socket, selected_webcam_value, get_private_ip(), "Office_1")
+    else:
+        send_metadata(client_socket, socket.gethostname(), get_private_ip(), "VIDEO-STREAM")
+
 
     def stream_video():
         while vid.isOpened():
@@ -100,7 +113,8 @@ def start_client():
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord("q"):
                     break
-            except:
+            except Exception as e:
+                print(f"Error while streaming: {e}")
                 break
         client_socket.close()
 
@@ -154,6 +168,10 @@ root.title("Client Video Stream")
 private_ip_label = tk.Label(root, text=f"Private IP: {get_private_ip()}")
 private_ip_label.pack()
 
+# Reconnection label
+reconnect_label = tk.Label(root, text="")
+reconnect_label.pack()
+
 # Start and Stop buttons
 button_frame = tk.Frame(root)
 button_frame.pack(pady=10)
@@ -192,12 +210,11 @@ video_option_menu.pack(pady=5)
 # Webcam Selection Dropdown
 webcam_frame = tk.Frame(root)
 webcam_frame.pack(pady=5)
-webcam_label = tk.Label(webcam_frame, text="Select Webcam:") # NEED TO GET LOGIC to search for webcams and only display the ones we find, otherwise (if just one) default to that one
+webcam_label = tk.Label(webcam_frame, text="Select Webcam:")
 webcam_label.grid(row=0, column=0, padx=5, pady=5)
 
-save_these=get_available_webcams()
-webcam_list = [f"Webcam {i}"  for i in save_these]  # Dummy webcam list, replace with actual
-# print(webcam_list)
+save_these = get_available_webcams()
+webcam_list = [f"Webcam {i}" for i in save_these]  # Dummy webcam list, replace with actual
 webcam_dropdown = ttk.Combobox(webcam_frame, values=webcam_list, state="readonly")
 webcam_dropdown.grid(row=0, column=1, padx=5, pady=5)
 webcam_dropdown.current(0)

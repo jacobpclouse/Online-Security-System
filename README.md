@@ -10,8 +10,8 @@
 - [x] Able to stream live video from single client to single server, no sound
 - [x] Allow port number and IP to be specified in bash command line as arguments (ie: python3 client.py 192.168.1.3 1025)
 - [x] Able to save video feed from client to server for playback after stream ends, unique filename, no corruption
-- [ ] Add Time Stamps and Location in video feed (DO ON CLIENT)
-- * [ ] Add framerate display in the feed
+- [x] Add Time Stamps and Location in video feed
+- * [x] Add framerate display in the feed
 - * [ ] Have preview images on client before streaming (grey color box around outside then red for recording)
 - [ ] Add logic to only include webcams that aren't currently streaming or in use
 - [x] Allow for the use of multiple client streams with a central socket server (can add/remove clients without disruptions)
@@ -21,8 +21,8 @@
 - * [ ] Have a toggle button for the client to not show the feed that it is transmitting (lower power pc)
 - * [x] Have a cut down console only client that the user passes ip and port into (and optionally video stream) as command line args
 - [ ] Log entries into sqlite or postgres database (meta data like location, time start, time end, camera name, ip, etc)
-- [ ] Set client cameras to retry like 5 times and then give up and stop execution.
-- * [ ] When you add auto reconnect, add a tkinter box that will populate and say "Reconnecting"
+- [X] Set client cameras to retry like 5 times and then give up and stop execution.
+- * [X] When you add auto reconnect, add a tkinter box that will populate and say "Reconnecting"
 - [ ] Add global variables to define resolution (height width) of video, how many retry attempts, name of json for client, etc
 - [ ] Organize ongoing/saved feeds in database with timestamps, name, location, duration, etc.
 - [ ] Setup Django/Flask so it can access the db across the network (not just locally on the same machine)
