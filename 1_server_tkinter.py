@@ -62,7 +62,8 @@ def show_client(addr, client_socket):
             payload_size = struct.calcsize("Q")
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             out = None
-            
+            filename = f'{camera_name}_loc_{location}_time_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
+            video_filename = os.path.join(OUTPUT_FOLDER_NAME, filename)
             while True:
                 while len(data) < payload_size:
                     packet = client_socket.recv(4 * 1024)
@@ -120,14 +121,15 @@ def show_client(addr, client_socket):
 
                 frames[addr] = frame
 
-                filename = f'{camera_name}_loc_{location}_time_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
-                video_filename = os.path.join(OUTPUT_FOLDER_NAME, filename)
                 if out is None:
-                    # filename = f'{camera_name}_loc_{location}_time_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
-                    # video_filename = os.path.join(OUTPUT_FOLDER_NAME, filename)
                     out = cv2.VideoWriter(video_filename, fourcc, 20.0, (frame.shape[1], frame.shape[0]))
-                
                 out.write(frame)
+                # if out is None:
+                #     # filename = f'{camera_name}_loc_{location}_time_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
+                #     # video_filename = os.path.join(OUTPUT_FOLDER_NAME, filename)
+                #     out = cv2.VideoWriter(video_filename, fourcc, 20.0, (frame.shape[1], frame.shape[0]))
+                
+                # out.write(frame)
 
             stop_time = datetime.now()
             if out is not None:
