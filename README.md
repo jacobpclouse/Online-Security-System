@@ -3,6 +3,7 @@
 ## Overview:
 - This client/server system should allow for a user to hook up multiple cameras and stream this data to a server that saves it for later
 - System developed and run on: Windows 10, Linux (Debian/Ubuntu Based)
+- System developed and run on: Windows 10, Linux (Debian/Ubuntu Based)
 
 ## Goals / Progression:
 - [x] Created client and server files, setup .gitignore
@@ -26,11 +27,15 @@
 - [ ] Add global variables to define resolution (height width) of video, how many retry attempts, name of json for client, etc
 - [ ] Organize ongoing/saved feeds in database with timestamps, name, location, duration, etc.
 - [ ] Setup Django/Flask so it can access the db across the network (not just locally on the same machine)
+- [ ] Setup Django/Flask so it can access the db across the network (not just locally on the same machine)
 - [ ] Setup Email Alerts to admin email to inform of new clients/client shutdowns and outages via Sendgrid API (socket server)
+- [ ] Use Django (or Flask) web server (WITH LOGIN) to access videos and play them in browser (seperate user DB, salt & hash) - Quasar Frontend
 - [ ] Use Django (or Flask) web server (WITH LOGIN) to access videos and play them in browser (seperate user DB, salt & hash) - Quasar Frontend
 - [ ] Let users organize videos and query the db to filter videos by length, location, or timestamps
 - [ ] Use Quasar/Vue.js in conjunction with Bootstrap to create a pretty/easy to use front end for the web client
+- [ ] Use Quasar/Vue.js in conjunction with Bootstrap to create a pretty/easy to use front end for the web client
 - [ ] Beautify the interface for the client, allow user to specify location info and potentially camera selection
+- [ ] Beautify the server interface with Tkinter(more than just start/stop buttons)
 - [ ] Beautify the server interface with Tkinter(more than just start/stop buttons)
 - [ ] Add motion detection in web interface so users can apply to camera feeds
 - [ ] Add mp4 to other video format converter/vise versa so users can convert video to format that works on their device (outside scope?)
