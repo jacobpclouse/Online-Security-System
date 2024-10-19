@@ -34,9 +34,11 @@ def get_metadata(camera_name, camera_ip, location, start_time, stop_time):
     return metadata
 
 def save_metadata(metadata, filename):
+    print('Saving Metadata...')
     """Saves metadata to a JSON file"""
     with open(filename, 'w') as f:
         json.dump(metadata, f, indent=4)
+
 
 def show_client(addr, client_socket):
     global frames, frame_count, start_time_dict
@@ -51,7 +53,7 @@ def show_client(addr, client_socket):
 
             camera_name = client_metadata["camera_name"]
             location = client_metadata["location"]
-            camera_ip =client_metadata["camera_ip"]
+            camera_ip = client_metadata["camera_ip"]
             start_time = datetime.now()
             start_time_dict[addr] = start_time  # Track start time for FPS calculation
             frame_count[addr] = 0  # Initialize frame count
@@ -62,6 +64,10 @@ def show_client(addr, client_socket):
             out = None
             filename = f'{camera_name}_loc_{location}_time_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
             video_filename = os.path.join(OUTPUT_FOLDER_NAME, filename)
+
+            # Initialize stop time here to be overwritten later
+            stop_time = None
+            metadata_filename = video_filename.replace('.mp4', '.json')
 
             while True:
                 while len(data) < payload_size:
@@ -88,7 +94,6 @@ def show_client(addr, client_socket):
                 fps = frame_count[addr] / elapsed_time if elapsed_time > 0 else 0
 
                 # Write text on frame for display -- top text
-                # text = f"IP: {addr} | Time: {current_time.strftime('%Y-%m-%d %H:%M:%S')}"
                 text = f"{camera_ip} | {current_time.strftime('%Y-%m-%d %H:%M:%S')}"
                 frame = ps.putBText(
                     frame,
@@ -105,7 +110,6 @@ def show_client(addr, client_socket):
 
                 # Metadata to display on the frame -- bottom text
                 text2 = f"FPS: {fps:.2f} | CAM: {camera_name} | BLDG: {location}"
-                # text2 = f"FPS: {fps:.2f} | CAM: {camera_name} | Location: {location}"
                 height, width, _ = frame.shape  # Get the dimensions of the frame
                 text_y_position = height - 50  # Adjust this value to fine-tune the position
                 frame = ps.putBText(
@@ -123,22 +127,27 @@ def show_client(addr, client_socket):
                 frames[addr] = frame
 
                 if out is None:
+                    print("OUT IS NONE")
                     out = cv2.VideoWriter(video_filename, fourcc, 20.0, (frame.shape[1], frame.shape[0]))
                 out.write(frame)
 
-            stop_time = datetime.now()
             if out is not None:
                 out.release()
-
-            metadata = get_metadata(camera_name, '', location, start_time, stop_time)
-            metadata_filename = video_filename.replace('.mp4', '.json')
-            save_metadata(metadata, metadata_filename)
 
         del frames[addr]
         client_socket.close()
 
     except Exception as e:
         print(f"CLIENT {addr} DISCONNECTED: {e}")
+        
+        # Set the stop time before updating metadata
+        stop_time = datetime.now()
+
+        # Update and save metadata
+        if addr in start_time_dict:
+            metadata = get_metadata(camera_name, camera_ip, location, start_time_dict[addr], stop_time)
+            save_metadata(metadata, metadata_filename)
+
         if addr in frames:
             del frames[addr]
 

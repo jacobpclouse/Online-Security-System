@@ -5,7 +5,6 @@ import threading
 import cv2
 import os
 import json
-import sqlite3  # Import sqlite3 to work with SQLite databases
 from datetime import datetime
 import tkinter as tk
 from tkinter import messagebox
@@ -23,40 +22,6 @@ frame_count = {}  # Dictionary to count frames for each client
 start_time_dict = {}  # Dictionary to store start time for each client
 createFolderIfNotExists(OUTPUT_FOLDER_NAME)
 
-# SQLite database setup
-DATABASE_NAME = 'CameraInfo.db'
-TABLE_NAME = 'VideoMetadata'
-
-def setup_database():
-    """Create SQLite database and table if they do not exist."""
-    conn = sqlite3.connect(DATABASE_NAME)
-    cursor = conn.cursor()
-    cursor.execute(f'''
-        CREATE TABLE IF NOT EXISTS {TABLE_NAME} (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            camera_name TEXT,
-            camera_ip TEXT,
-            location TEXT,
-            start_time TEXT,
-            stop_time TEXT,
-            metadata_filename TEXT
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
-def insert_metadata(camera_name, camera_ip, location, start_time, stop_time, metadata_filename):
-    """Insert metadata into the SQLite database."""
-    conn = sqlite3.connect(DATABASE_NAME)
-    cursor = conn.cursor()
-    cursor.execute(f'''
-        INSERT INTO {TABLE_NAME} (camera_name, camera_ip, location, start_time, stop_time, metadata_filename)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ''', (camera_name, camera_ip, location, start_time.strftime("%Y-%m-%d %H:%M:%S"), 
-          stop_time.strftime("%Y-%m-%d %H:%M:%S"), metadata_filename))
-    conn.commit()
-    conn.close()
-
 def get_metadata(camera_name, camera_ip, location, start_time, stop_time):
     """Creates a metadata dictionary"""
     metadata = {
@@ -73,6 +38,7 @@ def save_metadata(metadata, filename):
     """Saves metadata to a JSON file"""
     with open(filename, 'w') as f:
         json.dump(metadata, f, indent=4)
+
 
 def show_client(addr, client_socket):
     global frames, frame_count, start_time_dict
@@ -181,11 +147,127 @@ def show_client(addr, client_socket):
         if addr in start_time_dict:
             metadata = get_metadata(camera_name, camera_ip, location, start_time_dict[addr], stop_time)
             save_metadata(metadata, metadata_filename)
-            insert_metadata(camera_name, camera_ip, location, start_time_dict[addr], stop_time, metadata_filename)
 
         if addr in frames:
             del frames[addr]
+'''
+def show_client(addr, client_socket):
+    global frames, frame_count, start_time_dict
+    try:
+        print(f"CLIENT {addr} CONNECTED!")
+        if client_socket:
+            metadata_size = struct.unpack("Q", client_socket.recv(struct.calcsize("Q")))[0]
+            metadata_bytes = client_socket.recv(metadata_size)
+            client_metadata = pickle.loads(metadata_bytes)
 
+            print(f"Received metadata from client {addr}: {client_metadata}")
+
+            camera_name = client_metadata["camera_name"]
+            location = client_metadata["location"]
+            camera_ip =client_metadata["camera_ip"]
+            start_time = datetime.now()
+            start_time_dict[addr] = start_time  # Track start time for FPS calculation
+            frame_count[addr] = 0  # Initialize frame count
+            
+            data = b""
+            payload_size = struct.calcsize("Q")
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            out = None
+            filename = f'{camera_name}_loc_{location}_time_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.mp4'
+            video_filename = os.path.join(OUTPUT_FOLDER_NAME, filename)
+
+            # Pass camera_ip to the metadata
+            stop_time = datetime.now()
+            metadata = get_metadata(camera_name, camera_ip, location, start_time, stop_time)
+            metadata_filename = video_filename.replace('.mp4', '.json')
+            save_metadata(metadata, metadata_filename)
+
+            while True:
+                while len(data) < payload_size:
+                    packet = client_socket.recv(4 * 1024)
+                    if not packet:
+                        break
+                    data += packet
+                if not data:
+                    break
+                packed_msg_size = data[:payload_size]
+                data = data[payload_size:]
+                msg_size = struct.unpack("Q", packed_msg_size)[0]
+
+                while len(data) < msg_size:
+                    data += client_socket.recv(4 * 1024)
+                frame_data = data[:msg_size]
+                data = data[msg_size:]
+                frame = pickle.loads(frame_data)
+
+                # Update frame count for FPS calculation
+                frame_count[addr] += 1
+                current_time = datetime.now()
+                elapsed_time = (current_time - start_time_dict[addr]).total_seconds()
+                fps = frame_count[addr] / elapsed_time if elapsed_time > 0 else 0
+
+                # Write text on frame for display -- top text
+                # text = f"IP: {addr} | Time: {current_time.strftime('%Y-%m-%d %H:%M:%S')}"
+                text = f"{camera_ip} | {current_time.strftime('%Y-%m-%d %H:%M:%S')}"
+                frame = ps.putBText(
+                    frame,
+                    text,
+                    10,
+                    10,
+                    vspace=10,
+                    hspace=1,
+                    font_scale=0.7,
+                    background_RGB=(0, 0, 0),
+                    text_RGB=(255, 250, 250),
+                    alpha=0.5
+                )
+
+                # Metadata to display on the frame -- bottom text
+                text2 = f"FPS: {fps:.2f} | CAM: {camera_name} | BLDG: {location}"
+                # text2 = f"FPS: {fps:.2f} | CAM: {camera_name} | Location: {location}"
+                height, width, _ = frame.shape  # Get the dimensions of the frame
+                text_y_position = height - 50  # Adjust this value to fine-tune the position
+                frame = ps.putBText(
+                    frame,
+                    text2,
+                    10, text_y_position,
+                    vspace=5,
+                    hspace=2,
+                    font_scale=0.7,
+                    background_RGB=(0, 0, 0),
+                    text_RGB=(255, 255, 255),
+                    alpha=0.5
+                )
+
+                frames[addr] = frame
+
+                if out is None:
+                    print("OUT IS NONE")
+                    out = cv2.VideoWriter(video_filename, fourcc, 20.0, (frame.shape[1], frame.shape[0]))
+                out.write(frame)
+
+            if out is not None:
+                out.release()
+
+            # # Pass camera_ip to the metadata
+            # stop_time = datetime.now()
+            # metadata = get_metadata(camera_name, camera_ip, location, start_time, stop_time)
+            # metadata_filename = os.path.join(OUTPUT_FOLDER_NAME, video_filename.replace('.mp4', '.json'))
+            # # metadata_filename = video_filename.replace('.mp4', '.json')
+            # save_metadata(metadata, metadata_filename)
+
+        del frames[addr]
+        client_socket.close()
+
+    except Exception as e:
+        print(f"CLIENT {addr} DISCONNECTED: {e}")
+
+        # moved updating the metadata to here, keeps hitting exceptions
+        # when the client terminates, it hits an exception, that is why the metadata isnt updated
+
+        if addr in frames:
+            del frames[addr]
+'''
 def update_display():
     for addr in list(frames.keys()):
         frame = frames[addr]
@@ -226,7 +308,6 @@ def validate_ip_port():
 
 def start_server():
     """Start the server with the user-defined IP and port."""
-    setup_database()  # Call setup_database when the server starts
     eye_animation("--- === --- START SERVER LOG --- === ---")
     myLogo() 
     ip = ip_entry.get()
@@ -251,31 +332,61 @@ def on_start():
     start_button.config(state=tk.DISABLED)
     stop_button.config(state=tk.NORMAL)
 
-# Tkinter GUI setup
+def on_stop():
+    for client in clients:
+        client.join()
+    messagebox.showinfo("Server Status", "Server has been stopped.")
+    # eye_animation("SERVER HAS BEEN STOPPED. Close out of the Tkinter window to exit!")
+    print("SERVER HAS BEEN STOPPED. Close out of the Tkinter window to exit!")
+    start_button.config(state=tk.NORMAL)
+    stop_button.config(state=tk.DISABLED)
+
+# Setup Tkinter window
 root = tk.Tk()
-root.title("Server")
-root.geometry("800x600")
+root.title("Online Security System")
 
-ip_frame = tk.Frame(root)
-ip_frame.pack(pady=10)
-tk.Label(ip_frame, text="IP Address:").grid(row=0, column=0)
-ip_entry = tk.Entry(ip_frame)
-ip_entry.grid(row=0, column=1)
+# Display private IP
+private_ip_label = tk.Label(root, text=f"Private IP: {get_private_ip()}")
+private_ip_label.pack()
 
-tk.Label(ip_frame, text="Port:").grid(row=1, column=0)
-port_entry = tk.Entry(ip_frame)
-port_entry.grid(row=1, column=1)
+# Start and Stop buttons at the top
+button_frame = tk.Frame(root)
+button_frame.pack(pady=10)
 
-start_button = tk.Button(ip_frame, text="Start Server", command=on_start)
-start_button.grid(row=2, column=0, columnspan=2)
+start_button = tk.Button(button_frame, text="START SERVER", command=on_start, state=tk.DISABLED)
+start_button.pack(side=tk.LEFT, padx=5)
 
-stop_button = tk.Button(ip_frame, text="Stop Server", command=root.quit)
-stop_button.grid(row=3, column=0, columnspan=2)
-stop_button.config(state=tk.DISABLED)
+stop_button = tk.Button(button_frame, text="STOP SERVER", command=on_stop, state=tk.DISABLED)
+stop_button.pack(side=tk.LEFT, padx=5)
 
+# Input for IP and Port
+ip_port_frame = tk.Frame(root)
+ip_port_frame.pack(pady=5)
+
+ip_label = tk.Label(ip_port_frame, text="Server IP:")
+ip_label.grid(row=0, column=0, padx=5, pady=5)
+ip_entry = tk.Entry(ip_port_frame)
+ip_entry.insert(0, "127.0.0.1")
+ip_entry.grid(row=0, column=1, padx=5, pady=5)
+
+port_label = tk.Label(ip_port_frame, text="Server Port:")
+port_label.grid(row=1, column=0, padx=5, pady=5)
+port_entry = tk.Entry(ip_port_frame)
+port_entry.insert(0, "9999")
+port_entry.grid(row=1, column=1, padx=5, pady=5)
+
+# Validate IP and Port on change
+ip_entry.bind("<KeyRelease>", lambda _: validate_ip_port())
+port_entry.bind("<KeyRelease>", lambda _: validate_ip_port())
+
+# Video frame to display video feeds
 video_frame = tk.Frame(root)
 video_frame.pack(pady=10)
+
 client_labels = {}
 
-root.after(100, update_display)
+# Start updating display
+update_display()
+
+# Run the Tkinter event loop
 root.mainloop()

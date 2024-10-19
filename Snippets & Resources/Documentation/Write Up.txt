@@ -1,0 +1,4 @@
+add to the readme: have postgress installed and update enviornment variables in the example.py
+add that you need to sign up for sendgrid api key if you want email functionality
+add how to install python and setup a virtual environment
+add that you need to install node.js and quasar and install the npm dependencies from the directory

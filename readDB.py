@@ -2,10 +2,10 @@ import sqlite3  # Import SQLite library
 
 def read_metadata_from_db():
     """Reads and prints all entries from the CameraMetadata table."""
-    conn = sqlite3.connect('Camera_Data.db')
+    conn = sqlite3.connect('CameraInfo.db')
     c = conn.cursor()
     
-    c.execute("SELECT * FROM CameraMetadata")
+    c.execute("SELECT * FROM VideoMetadata")
     rows = c.fetchall()  # Fetch all rows from the executed query
     
     if rows:
