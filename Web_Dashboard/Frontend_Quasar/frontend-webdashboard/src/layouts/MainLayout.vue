@@ -2,6 +2,53 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
+        <q-toolbar-title>
+          My Quasar App
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-header>
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+
+    <!-- Add the button and message display inside the footer -->
+    <q-footer class="q-pa-md flex flex-center" elevated>
+      <div>
+        <q-btn label="Get Flask Data" @click="fetchData" />
+        <p>{{ message }}</p>
+      </div>
+    </q-footer>
+  </q-layout>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      message: ''
+    }
+  },
+  methods: {
+    async fetchData() {
+      try {
+        const response = await axios.get('http://localhost:5000/api/data');
+        this.message = response.data.message;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+  }
+}
+</script>
+
+
+<!-- <template>
+  <q-layout view="lHh Lpr lFf">
+    <q-header elevated>
+      <q-toolbar>
         <q-btn
           flat
           dense
@@ -103,4 +150,4 @@ const leftDrawerOpen = ref(false)
 function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
-</script>
+</script> -->

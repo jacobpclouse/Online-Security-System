@@ -8,3 +8,4 @@ OUTPUTS
 CLIENT_VIDEO_STORAGE
 Utility_Functions/__pycache__/
 *.db
+Web_Dashboard/Backend_Flask/Flask_Functions/__pycache__
