@@ -181,6 +181,7 @@ def show_client(addr, client_socket):
         if addr in start_time_dict:
             metadata = get_metadata(camera_name, camera_ip, location, start_time_dict[addr], stop_time)
             save_metadata(metadata, metadata_filename)
+            metadata_filename = video_filename.replace('.json', '.mp4')
             insert_metadata(camera_name, camera_ip, location, start_time_dict[addr], stop_time, metadata_filename)
 
         if addr in frames:
